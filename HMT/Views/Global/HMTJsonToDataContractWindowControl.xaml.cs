@@ -2,6 +2,7 @@
 using HMT.Models;
 using HMT.OptionsPane;
 using Microsoft.Dynamics.AX.Metadata.MetaModel;
+using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Shell;
 using Newtonsoft.Json.Linq;
 using System;
@@ -23,6 +24,27 @@ namespace HMT.Views.Global
         public HMTJsonToDataContractWindowControl()
         {
             InitializeComponent();
+            Loaded += OnLoaded;
+            Unloaded += OnUnloaded;
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            VSColorTheme.ThemeChanged += OnThemeChanged;
+        }
+
+        private void OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            VSColorTheme.ThemeChanged -= OnThemeChanged;
+        }
+
+        private void OnThemeChanged(ThemeChangedEventArgs e)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                InvalidateVisual();
+                UpdateLayout();
+            });
         }
 
         /// <summary>

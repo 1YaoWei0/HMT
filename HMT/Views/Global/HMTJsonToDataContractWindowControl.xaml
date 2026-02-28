@@ -3,35 +3,81 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"   
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
              mc:Ignorable="d"
-             d:DesignHeight="500" d:DesignWidth="500"
-             Name="HMTJsonToDataContractWindow">
-    <Grid Background="#dae2ff">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+             d:DesignHeight="500"
+             d:DesignWidth="500"
+             Name="HMTJsonToDataContractWindow"
+             Background="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBackgroundKey}}"
+             Foreground="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowTextKey}}"
+             FontFamily="{DynamicResource {x:Static vsshell:VsResourceKeys.EnvironmentFontFamilyKey}}"
+             FontSize="{DynamicResource {x:Static vsshell:VsResourceKeys.EnvironmentFontSizeKey}}">
+    <UserControl.Resources>
+        <Style TargetType="Label">
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowTextKey}}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,0,0,6" />
+        </Style>
+
+        <Style TargetType="TextBox">
+            <Setter Property="Margin" Value="0,0,0,8" />
+            <Setter Property="MinHeight" Value="24" />
+        </Style>
+
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="0,0,0,8" />
+            <Setter Property="MinHeight" Value="24" />
+            <Setter Property="Padding" Value="12,4" />
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="12">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="4*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="4*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="4*" />
         </Grid.ColumnDefinitions>
-        <Grid Grid.Row="1" Grid.Column="0">
+
+        <Grid Grid.Column="0" Margin="0,0,8,0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="10*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBox Grid.Row="0" x:Name="jsonInput"  AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" AcceptsTab="True" Margin="10,10,0,10" />
-            <Label Grid.Row="1" Content="Please input Class Name" HorizontalAlignment="Center" VerticalAlignment="Top"  FontSize="10" FontFamily="Microsoft JhengHei" FontWeight="Bold" Height="23" Margin="0,10,0,0"/>
-            <TextBox Grid.Row="2" x:Name="className" HorizontalAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Top" Width="130" Height="24"/>
-            <Button Grid.Row="2" x:Name="generateButton" Click="GenerateButton_Click" Background="#2d344a" Foreground="White" Content="Generate" HorizontalAlignment="Center" VerticalAlignment="Top" Width="127" Height="24" FontFamily="Microsoft JhengHei" FontWeight="Bold" Margin="0,35,0,0" Grid.RowSpan="2"/>
+            <TextBox x:Name="jsonInput"
+                     Grid.Row="0"
+                     AcceptsReturn="True"
+                     AcceptsTab="True"
+                     TextWrapping="Wrap"
+                     VerticalScrollBarVisibility="Auto" />
+
+            <Label Grid.Row="1"
+                   Content="Class name" />
+
+            <StackPanel Grid.Row="2"
+                        Orientation="Horizontal">
+                <TextBox x:Name="className"
+                         MinWidth="180"
+                         Margin="0,0,8,8" />
+                <Button x:Name="generateButton"
+                        Click="GenerateButton_Click"
+                        Content="Generate"
+                        MinWidth="100" />
+            </StackPanel>
         </Grid>
 
-        <Button x:Name="loadButton" Click="LoadJsonButton_Click" Background="#2d344a" Foreground="White"  Grid.Column="1" Content=">" HorizontalAlignment="Center" Margin="0,115,0,0" Grid.Row="1" VerticalAlignment="Top" Width="30" Height="30" FontSize="18" FontWeight="Bold"/>
-        <TreeView x:Name="jsonTreeView" Grid.Column="2" Margin="0,10,10,10"/>
+        <Button x:Name="loadButton"
+                Grid.Column="1"
+                Click="LoadJsonButton_Click"
+                Content=">"
+                VerticalAlignment="Center"
+                MinWidth="32"
+                MinHeight="32"
+                Margin="0,0,8,0"
+                FontWeight="SemiBold" />
+
+        <TreeView x:Name="jsonTreeView"
+                  Grid.Column="2" />
     </Grid>
 </UserControl>
