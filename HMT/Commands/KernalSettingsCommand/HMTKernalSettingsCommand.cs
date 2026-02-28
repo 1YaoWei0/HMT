@@ -3,7 +3,7 @@ using System;
 using System.ComponentModel.Design;
 using Task = System.Threading.Tasks.Task;
 using HMT.Kernel;
-using HMT.Views.Settings;
+using HMT.OptionsPane.KernelSettings;
 
 namespace HMT.HMTCommands.HMTKernalSettingsCommand
 {
@@ -57,9 +57,8 @@ namespace HMT.HMTCommands.HMTKernalSettingsCommand
         /// <param name="e">e</param>
         private void Execute(object sender, EventArgs e)
         {
-            HMTKernelSettings kernelSettings = new HMTKernelSettings(package);
-
-            kernelSettings.ShowDialog();
+            ThreadHelper.ThrowIfNotOnUIThread();
+            HMTKernelSettingsOptionsNavigator.Open(package);
         }
     }
 }

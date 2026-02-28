@@ -1,5 +1,5 @@
 ﻿using HMT.Services.Projects;
-using HMT.Views.Settings;
+using HMT.OptionsPane.KernelSettings;
 using Microsoft.VisualStudio.Shell;
 using System;
 using System.Windows.Forms;
@@ -81,10 +81,10 @@ namespace HMT.Views.Projects
 
         private void SetupNameButton_Click(object sender, EventArgs e)
         {
-            HMTKernelSettings f = new HMTKernelSettings(AsyncPackage);
-            f.ShowDialog();
+            ThreadHelper.ThrowIfNotOnUIThread();
+            HMTKernelSettingsOptionsNavigator.Open(AsyncPackage);
 
-            _parms.InitFromSettings();
+            _parms.InitFromOption(AsyncPackage);
 
             _parms.CalcResultName();
             createExtensionClassParmsBindingSource.ResetBindings(false);

@@ -57,7 +57,7 @@ namespace HMT.Services.Projects
         public void InitFromOption(AsyncPackage package)
         {
             _kernelSettingsManager = new HMTKernelSettingsManager();
-            _kernelSettingsManager.LoadSettings();
+            _kernelSettingsManager.LoadSettings(package);
 
             Prefix = OptionsPane.HMTOptionsUtils.getPrefix(package);
         }
