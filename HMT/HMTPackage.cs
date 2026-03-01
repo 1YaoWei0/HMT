@@ -3,6 +3,7 @@ using HMT.Commands.UserFeedbackCommand;
 using HMT.Commands.UserFeedbackCommands;
 using HMT.Commands.UserGuideCommands;
 using HMT.OptionsPane;
+using Microsoft.Dynamics.AX.Metadata.Service;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
@@ -35,8 +36,6 @@ namespace HMT
     /// </remarks>   
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [ProvideAutoLoad(UIContextGuids80.SolutionExists, PackageAutoLoadFlags.BackgroundLoad)]
-    [ProvideAutoLoad(UIContextGuids80.NoSolution, PackageAutoLoadFlags.BackgroundLoad)]
-    [ProvideAutoLoad(UIContextGuids80.EmptySolution, PackageAutoLoadFlags.BackgroundLoad)]
     [Guid("4ab38674-8342-44af-9ef8-fdaf145c8972")]    
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideOptionPage(typeof(HMTOptions), "HMT D365FFO tools", "D365FFO Page", 0, 0, true)]
@@ -61,6 +60,25 @@ namespace HMT
             // Do any initialization that requires the UI thread after switching to the UI thread.
             await base.InitializeAsync(cancellationToken, progress);
 
+            await HMTUserIssueFeedbackCommand.InitializeAsync(this);
+            await HMTUserSuggestCommand.InitializeAsync(this);
+            await HMTUserGuideCommand.InitializeAsync(this);
+            await Commands.WindowCommands.HMTJsonToDataContractWindowCommand.InitializeAsync(this);
+
+            if (await IsDynamicsEnvironmentAvailableAsync())
+            {
+                await InitializeDynamicsCommandsAsync();
+            }
+        }
+
+        private async Task<bool> IsDynamicsEnvironmentAvailableAsync()
+        {
+            IMetaModelProviders providers = await GetServiceAsync(typeof(IMetaModelProviders)) as IMetaModelProviders;
+            return providers != null && providers.CurrentMetaModelService != null;
+        }
+
+        private async Task InitializeDynamicsCommandsAsync()
+        {
             await HMTCommands.HMTLabelGenerateCommands.HMTLabelGenerateForAll.InitializeAsync(this);
             await HMTCommands.HMTLabelGenerateCommands.HMTLabelGenerateForItem.InitializeAsync(this);
             await HMTCommands.HMTLabelGenerateCommands.HMTLabelGenerateForProject.InitializeAsync(this);
@@ -76,10 +94,6 @@ namespace HMT
             await HMTCommands.TableFieldsBuilderCommands.TableFieldsBuilderCommand.InitializeAsync(this);
             await HMTCommands.TableCommands.TableBuilderCommand.InitializeAsync(this);
             await HMTCommands.HMTPrivilegeAndDutyGeneratorCommands.HMTPrivilegeAndDutyGenerateForItem.InitializeAsync(this);
-            await HMTUserIssueFeedbackCommand.InitializeAsync(this);
-            await HMTUserSuggestCommand.InitializeAsync(this);
-            await HMTUserGuideCommand.InitializeAsync(this);
-            await Commands.WindowCommands.HMTJsonToDataContractWindowCommand.InitializeAsync(this);
         }
 
         /// <summary>
