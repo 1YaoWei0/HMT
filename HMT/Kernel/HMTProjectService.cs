@@ -30,9 +30,9 @@ namespace HMT.Kernel
         public Project currentProject()
         {
             ThreadHelper.ThrowIfNotOnUIThread();
-            Array projects = gDTE.ActiveSolutionProjects as Array;
+            Array projects = GetActiveSolutionProjects();
 
-            if (projects.Length > 0)
+            if (projects != null && projects.Length > 0)
             {
                 gProject = projects.GetValue(0) as Project;
                 return gProject;
@@ -51,9 +51,7 @@ namespace HMT.Kernel
         public Array CurrentProjects()
         {
             ThreadHelper.ThrowIfNotOnUIThread();
-            Array projects = gDTE.ActiveSolutionProjects as Array;
-
-            return projects;
+            return GetActiveSolutionProjects();
         }
 
         public Project currentProject(Project project)
@@ -75,26 +73,27 @@ namespace HMT.Kernel
         {
             ThreadHelper.ThrowIfNotOnUIThread();
             DTE dte = CoreUtility.ServiceProvider.GetService(typeof(DTE)) as DTE;
+            List<Project> labelProjects = new List<Project>();
 
             if (dte != null) {
                 IEnumerator objects = dte.Solution.Projects.GetEnumerator();
-                int count = 0;
-
-                // initialize the gprojects array
-                int i = dte.Solution.Projects.Count;
-                gProjects = Array.CreateInstance(typeof(Project), i);
 
                 while (objects.MoveNext())
                 {
                     Project project = objects.Current as Project;
 
-                    if (count < i && existsLabel(project))
+                    if (project != null && existsLabel(project))
                     {
-                        gProjects.SetValue(project, count);
-                        count++;
+                        labelProjects.Add(project);
                     }
                 }
-            }            
+
+                gProjects = labelProjects.ToArray();
+            }
+            else
+            {
+                gProjects = Array.CreateInstance(typeof(Project), 0);
+            }
 
             return gProjects;
         }
@@ -108,6 +107,11 @@ namespace HMT.Kernel
         private bool existsLabel(Project project)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
+            if (project == null || project.ProjectItems == null)
+            {
+                return false;
+            }
+
             IList<Tuple<string, ProjectItem>> listOfLabelFiles;
 
             listOfLabelFiles = GetProjectItems(project.ProjectItems, typeof(AxLabelFile));
@@ -164,7 +168,6 @@ namespace HMT.Kernel
                     continue;
                 }
 
-                List<Type> listOfTypes = new List<Type>();
                 IList<Tuple<string, ProjectItem>> listOfLabelFiles;
                 Tuple<string, ProjectItem> labelItem;
 
@@ -184,7 +187,11 @@ namespace HMT.Kernel
         public ProjectItem currentLabelNode()
         {
             ThreadHelper.ThrowIfNotOnUIThread();
-            List<Type> listOfTypes = new List<Type>();
+            if (gProject == null || gProject.ProjectItems == null)
+            {
+                return null;
+            }
+
             IList<Tuple<string, ProjectItem>> listOfLabelFiles;
             Tuple<string, ProjectItem> labelItem;
 
@@ -204,7 +211,18 @@ namespace HMT.Kernel
         public IList<Tuple<string, object>> getAllElements()
         {
             ThreadHelper.ThrowIfNotOnUIThread();
+            if (gProject == null || gProject.ProjectItems == null)
+            {
+                return new List<Tuple<string, object>>();
+            }
+
             return GetMetaElements(gProject.ProjectItems, null);
+        }
+
+        private static Array GetActiveSolutionProjects()
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+            return gDTE?.ActiveSolutionProjects as Array;
         }
 
         public IMetaModelService currentModel()
