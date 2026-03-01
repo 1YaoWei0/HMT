@@ -3,6 +3,7 @@ using HMT.Commands.UserFeedbackCommand;
 using HMT.Commands.UserFeedbackCommands;
 using HMT.Commands.UserGuideCommands;
 using HMT.OptionsPane;
+using HMT.OptionsPane.KernelSettings;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
@@ -40,6 +41,7 @@ namespace HMT
     [Guid("4ab38674-8342-44af-9ef8-fdaf145c8972")]    
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideOptionPage(typeof(HMTOptions), "HMT D365FFO tools", "D365FFO Page", 0, 0, true)]
+    [ProvideOptionPage(typeof(HMTKernelSettingsOptionPage), "HMT", "Kernel Settings", 0, 0, true)]
     [ProvideToolWindow(typeof(HMT.Views.Global.HMTJsonToDataContractWindow))]
     public sealed class HMTPackage : AsyncPackage
     {
