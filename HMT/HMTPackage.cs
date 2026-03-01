@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using Task = System.Threading.Tasks.Task;
 using HMT.Models;
 using System.Windows.Controls;
-using static Microsoft.VisualStudio.Threading.AsyncReaderWriterLock;
+using HMT.Views.Global;
 
 namespace HMT
 {
@@ -40,7 +40,11 @@ namespace HMT
     [Guid("4ab38674-8342-44af-9ef8-fdaf145c8972")]    
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideOptionPage(typeof(HMTOptions), "HMT D365FFO tools", "D365FFO Page", 0, 0, true)]
-    [ProvideToolWindow(typeof(HMT.Views.Global.HMTJsonToDataContractWindow))]
+    [ProvideOptionPage(typeof(GeneralOptionPage), "HMT D365FFO tools", "General", 0, 0, true)]
+    [ProvideProfile(typeof(GeneralOptionPage), "HMT D365FFO tools", "General", 0, 0, true)]
+    [ProvideToolWindow(typeof(HMTJsonToDataContractWindow))]
+    [ProvideToolWindow(typeof(HAiMainChatWindow))]
+    [ProvideToolWindow(typeof(HMTDllManagerWindowPackage))]
     public sealed class HMTPackage : AsyncPackage
     {
         /// <summary>
@@ -69,7 +73,6 @@ namespace HMT
             await HMTCommands.HMTFormGeneratorCommand.HMTFormGenerateCommand.InitializeAsync(this);
             await HMTCommands.HMTHeaderCommentGeneratorCommands.HMTHeaderCommentGenerateForItem.InitializeAsync(this);
             await HMTCommands.HMTHeaderCommentGeneratorCommands.HMTHeaderCommentGenerateForProject.InitializeAsync(this);
-            // await HMTCommands.HMTHeaderCommentGeneratorCommands.HMTHeaderCommentGenerateForAll.InitializeAsync(this); This function abandoned
             await HMTCommands.HMTParmMethodGenerateCommands.HMTParmMethodGenerateCommand.InitializeAsync(this);
             await HMTCommands.HMTFindExistGeneratorCmd.HMTFindExistGeneratorCmd.InitializeAsync(this);
             await HMTCommands.HMTExtendAxElementCmd.HMTExtendAxElementCmd.InitializeAsync(this);
@@ -79,7 +82,15 @@ namespace HMT
             await HMTUserIssueFeedbackCommand.InitializeAsync(this);
             await HMTUserSuggestCommand.InitializeAsync(this);
             await HMTUserGuideCommand.InitializeAsync(this);
+
+            // Ina Wang on 03/05/2025
+            // Initialize the HMTImportOptionsCmds and HMTExportOptionsCommands
+            await HMTCommands.HMTImportOptionsCmds.HMTImportOptionsCmds.InitializeAsync(this);
+            await HMTCommands.HMTExportOptionsCommands.HMTExportOptionsCommands.InitializeAsync(this);
+            // end Ina Wang on 03/05/2025
             await Commands.WindowCommands.HMTJsonToDataContractWindowCommand.InitializeAsync(this);
+            await Commands.WindowCommands.HAiMainChatWindowCommand.InitializeAsync(this);
+            await Commands.WindowCommands.HMTDllManagerWindowPackageCommand.InitializeAsync(this);
         }
 
         /// <summary>

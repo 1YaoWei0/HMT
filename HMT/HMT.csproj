@@ -56,19 +56,38 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AICodeCompletionSourceProvider.cs" />
+    <Compile Include="Commands\api\DskCommand.cs" />
+    <Compile Include="Commands\ExportOptionsCommands\HMTExportOptionsCommands.cs" />
+    <Compile Include="Commands\ImportOptionsCommands\HMTImportOptionsCmds.cs" />
     <Compile Include="Commands\UserFeedbackCommands\HMTUserIssueFeedbackCommand.cs" />
     <Compile Include="Commands\UserFeedbackCommands\HMTUserSuggestCommand.cs" />
     <Compile Include="Commands\UserGuideCommands\HMTUserGuideCommand.cs" />
+    <Compile Include="Commands\WindowCommands\HAiMainChatWindowCommand.cs" />
+    <Compile Include="Copilot\HMTChatMessage.cs" />
     <Compile Include="KernelSettings\HMTKernelSettings.cs" />
     <Compile Include="Kernel\AutoControlSize.cs" />
     <Compile Include="Kernel\ClassDC.cs" />
+    <Compile Include="Kernel\ClientFactory.cs" />
     <Compile Include="Kernel\CreateXppItem.cs" />
     <Compile Include="Kernel\HMTDynamicsProcessor.cs" />
     <Compile Include="Kernel\HMTPasteText.cs" />
+    <Compile Include="Kernel\HMTStorageConfig.cs" />
     <Compile Include="Kernel\HMTTemplate.cs" />
     <Compile Include="Kernel\HMTUtils.cs" />
     <Compile Include="Kernel\IStrategy.cs" />
+    <Compile Include="Kernel\SecureStringHelper.cs" />
+    <Compile Include="Models\DskApiResponse.cs" />
+    <Compile Include="Models\DskChoice.cs" />
+    <Compile Include="Models\DskMessage.cs" />
+    <Compile Include="Models\DskUsage.cs" />
     <Compile Include="Models\HMTJsonToDataContractToolWindowData.cs" />
+    <Compile Include="OptionsPane\GeneralOptionPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="OptionsPane\HMTOptionsProvider.cs" />
+    <Compile Include="Services\Global\IThirdPartyApiService.cs" />
+    <Compile Include="Services\Global\OpenaiApiService.cs" />
     <Compile Include="Views\Editors\HMTParmMethodGenerateDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -76,6 +95,10 @@
       <DependentUpon>HMTParmMethodGenerateDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Services\Editors\HMTParmMethodGenerateService.cs" />
+    <Compile Include="Views\Global\HAiMainChatWindow.cs" />
+    <Compile Include="Views\Global\HAiMainChatWindowControl.xaml.cs">
+      <DependentUpon>HAiMainChatWindowControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Global\HMTBatchJobGenerateDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -83,10 +106,27 @@
       <DependentUpon>HMTBatchJobGenerateDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Services\Global\HMTBatchJobGenerateService.cs" />
+    <Compile Include="Views\Global\HMTDllManagerWindowPackage.cs" />
+    <Compile Include="Commands\WindowCommands\HMTDllManagerWindowPackageCommand.cs" />
+    <Compile Include="Views\Global\HMTDllManagerWindowPackageControl.xaml.cs">
+      <DependentUpon>HMTDllManagerWindowPackageControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Global\HMTJsonToDataContractWindow.cs" />
     <Compile Include="Commands\WindowCommands\HMTJsonToDataContractWindowCommand.cs" />
     <Compile Include="Views\Global\HMTJsonToDataContractWindowControl.xaml.cs">
       <DependentUpon>HMTJsonToDataContractWindowControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Global\HMTXMLFileDownloadWinForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Global\HMTXMLFileDownloadWinForm.Designer.cs">
+      <DependentUpon>HMTXMLFileDownloadWinForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Global\HMTXMLFileUploadWinForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Global\HMTXMLFileUploadWinForm.Designer.cs">
+      <DependentUpon>HMTXMLFileUploadWinForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\Projects\CreateExtensionClassDialog.cs">
       <SubType>Form</SubType>
@@ -195,6 +235,9 @@
       <DependentUpon>TableFieldsBuilderDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Services\Items\Tables\TableFieldsBuilderParms.cs" />
+    <Compile Include="Views\Settings\GeneralOptions.xaml.cs">
+      <DependentUpon>GeneralOptions.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Settings\HMTKernelSettings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -259,6 +302,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Views\Editors\HMTParmMethodGenerateDialog.resx">
       <DependentUpon>HMTParmMethodGenerateDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Global\HMTXMLFileDownloadWinForm.resx">
+      <DependentUpon>HMTXMLFileDownloadWinForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Global\HMTXMLFileUploadWinForm.resx">
+      <DependentUpon>HMTXMLFileUploadWinForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Projects\CreateExtensionClassDialog.resx">
       <DependentUpon>CreateExtensionClassDialog.cs</DependentUpon>
@@ -342,30 +391,68 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
+    <!-- 在 .csproj 文件中手动添加引用 -->
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="AvalonEdit">
+      <Version>6.3.0.90</Version>
+    </PackageReference>
+    <PackageReference Include="Community.VisualStudio.Toolkit.17">
+      <Version>17.0.533</Version>
+    </PackageReference>
+    <PackageReference Include="CommunityToolkit.Mvvm">
+      <Version>8.4.0</Version>
+    </PackageReference>
+    <PackageReference Include="MdXaml" Version="1.27.0" />
+    <PackageReference Include="MdXaml.Plugins">
+      <Version>1.27.0</Version>
+    </PackageReference>
     <PackageReference Include="MessagePack">
       <Version>3.1.1</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Language.Intellisense">
+      <Version>17.13.226</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.SDK">
-      <Version>17.12.40392</Version>
+      <Version>17.13.40008</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.3</Version>
     </PackageReference>
+    <PackageReference Include="RestSharp">
+      <Version>112.1.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.Text.Json">
+      <Version>9.0.1</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\Global\HAiMainChatWindowControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Global\HMTDllManagerWindowPackageControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Global\HMTJsonToDataContractWindowControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Settings\GeneralOptions.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
