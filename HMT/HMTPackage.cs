@@ -91,6 +91,7 @@ namespace HMT
             await Commands.WindowCommands.HMTJsonToDataContractWindowCommand.InitializeAsync(this);
             await Commands.WindowCommands.HAiMainChatWindowCommand.InitializeAsync(this);
             await Commands.WindowCommands.HMTDllManagerWindowPackageCommand.InitializeAsync(this);
+            await Commands.AiCommands.ImportAiSpecCommand.InitializeAsync(this);
         }
 
         /// <summary>

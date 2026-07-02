@@ -1,0 +1,121 @@
+{
+  "version": "1.0",
+  "objects": [
+    {
+      "objectType": "Enum",
+      "enum": {
+        "name": "VehicleType",
+        "label": "Vehicle type",
+        "helpText": "Specifies the type of vehicle",
+        "values": [
+          { "name": "Car", "label": "Car", "value": 0 },
+          { "name": "Truck", "label": "Truck", "value": 1 },
+          { "name": "Motorcycle", "label": "Motorcycle", "value": 2 }
+        ],
+        "createEdtType": true,
+        "edtTypeName": "VehicleTypeId"
+      }
+    },
+    {
+      "objectType": "Edt",
+      "edt": {
+        "name": "VehicleId",
+        "type": "String",
+        "extends": "SysGroup",
+        "label": "Vehicle ID",
+        "helpText": "Unique identifier for a vehicle",
+        "stringSize": 20
+      }
+    },
+    {
+      "objectType": "Table",
+      "table": {
+        "name": "VehicleTable",
+        "label": "Vehicles",
+        "tableGroup": "Main",
+        "cacheLevel": "Found",
+        "titleField1": "VehicleId",
+        "titleField2": "Description",
+        "fields": [
+          {
+            "name": "VehicleId",
+            "type": "String",
+            "edt": "VehicleId",
+            "mandatory": true,
+            "allowEdit": false,
+            "ignoreEdtRelation": true
+          },
+          {
+            "name": "Description",
+            "type": "String",
+            "edt": "Description"
+          },
+          {
+            "name": "VehicleType",
+            "type": "Enum",
+            "enumType": "VehicleType",
+            "edt": "VehicleTypeId"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "VehicleIdIdx",
+            "fields": ["VehicleId"],
+            "alternateKey": true
+          }
+        ],
+        "fieldGroups": [
+          {
+            "name": "Overview",
+            "label": "Overview",
+            "fields": ["VehicleId", "Description", "VehicleType"]
+          }
+        ]
+      }
+    },
+    {
+      "objectType": "Form",
+      "form": {
+        "name": "VehicleTable",
+        "label": "Vehicles",
+        "helpText": "Manage vehicle records",
+        "pattern": "SimpleList",
+        "dataSource": "VehicleTable",
+        "gridFields": ["VehicleId", "Description", "VehicleType"],
+        "createMenuItem": true
+      }
+    },
+    {
+      "objectType": "SecurityPrivilege",
+      "securityPrivilege": {
+        "name": "VehicleTableView",
+        "label": "View vehicles",
+        "accessLevel": "Read",
+        "entryPoints": [
+          {
+            "name": "VehicleTable",
+            "objectName": "VehicleTable",
+            "objectType": "MenuItemDisplay",
+            "forms": ["VehicleTable"]
+          }
+        ]
+      }
+    },
+    {
+      "objectType": "SecurityPrivilege",
+      "securityPrivilege": {
+        "name": "VehicleTableMaintain",
+        "label": "Maintain vehicles",
+        "accessLevel": "Delete",
+        "entryPoints": [
+          {
+            "name": "VehicleTable",
+            "objectName": "VehicleTable",
+            "objectType": "MenuItemDisplay",
+            "forms": ["VehicleTable"]
+          }
+        ]
+      }
+    }
+  ]
+}
